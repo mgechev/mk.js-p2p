@@ -1,0 +1,19 @@
+{
+  "name": "y",
+  "version": "0.0.0",
+  "description": "WebRTC of MK.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mgechev/mk.js-p2p.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mgechev/mk.js-p2p/issues"
+  },
+  "homepage": "https://github.com/mgechev/mk.js-p2p"
+}
