@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/mgechev/mk.js-p2p/issues"
   },
-  "homepage": "https://github.com/mgechev/mk.js-p2p"
+  "homepage": "https://github.com/mgechev/mk.js-p2p",
+  "dependencies": {
+    "peerjs": "~0.3.9",
+    "express": "~4.7.2"
+  }
 }
