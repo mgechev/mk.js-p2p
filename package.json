@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/mgechev/mk.js-p2p",
   "dependencies": {
-    "peerjs": "~0.3.9",
-    "express": "~4.7.2"
+    "express": "~4.7.2",
+    "peer": "~0.2.6"
   }
 }
