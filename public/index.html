@@ -82,6 +82,9 @@
           };
         })();
 
+        var gameName = (location.href.match(/#room=(.*)/) || [])[1] || guid();
+        console.log(location.protocol + '//' + location.host + '/#room=' + gameName);
+
         (function () {
           var startGame = function () {
             $('loading').style.visibility = 'hidden';
@@ -104,7 +107,7 @@
               }
             },
             isHost: !/room=/.test(location.hash),
-            gameName: (location.href.match(/#room=(.*)/) || [])[1] || guid(),
+            gameName: gameName,
             gameType: 'network',
             transport: mk.controllers.Network.prototype.Transports.peerjs
           };

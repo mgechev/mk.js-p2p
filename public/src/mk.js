@@ -482,7 +482,7 @@
   /**
    * WebRTC via peerjs transport
    */
-  mk.controllers.Network.prototype.Transports.peerjs.init = function () {
+  mk.controllers.Network.prototype.Transports.peerjs.init = function (ctrl) {
     function initSocket(socket) {
       socket.on('data', function (data) {
         data = JSON.parse(data);
@@ -492,11 +492,11 @@
       });
     }
 
-    var peerName = this._gameName + '-peer',
-        hostName = this._gamaName + '-host',
-        peer = new Peer((this._isHost) ? hostName : peerName,
+    var peerName = ctrl._gameName + '-peer',
+        hostName = ctrl._gameName + '-host',
+        peer = new Peer((ctrl._isHost) ? hostName : peerName,
           { host: 'localhost', port: 5000, path: '/peerjs' });
-    if (this._isHost) {
+    if (ctrl._isHost) {
       var self = this;
       peer.on('connection', function (conn) {
         self._socket = conn;
@@ -585,7 +585,7 @@
       this._player = 0;
     }
     this._addHandlers();
-    this._transport.init();
+    this._transport.init(this);
     this._transport.on('connect', function () {
       if (self._isHost) {
         self._createGame(self._gameName);
