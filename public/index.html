@@ -103,9 +103,10 @@
                 }
               }
             },
-            isHost: /room=/.test(location.hash),
-            gameName: (location.href.match(/#room=(.*)/) || []) || guid(),
-            gameType: 'p2p'
+            isHost: !/room=/.test(location.hash),
+            gameName: (location.href.match(/#room=(.*)/) || [])[1] || guid(),
+            gameType: 'network',
+            transport: mk.controllers.Network.prototype.Transports.peerjs
           };
 
           function startNewGame() {
