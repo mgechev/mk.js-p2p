@@ -487,6 +487,7 @@
       socket.on('data', function (data) {
         data = JSON.parse(data);
         (this._topicCbs[data.topic] || []).forEach(function (cb) {
+          console.log(data);
           cb(data.data);
         });
       });
@@ -515,10 +516,11 @@
       topic: topic,
       data: data
     };
-    this._socket.send(msg);
+    this._socket.send(JSON.stringify(msg));
   };
 
   mk.controllers.Network.prototype.Transports.peerjs.on = function (topic, cb) {
+    console.log(topic);
     this._topicCbs[topic] = this._topicCbs[topic] || [];
     this._topicCbs[topic].push(cb);
   };
