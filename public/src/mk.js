@@ -484,12 +484,11 @@
    */
   mk.controllers.Network.prototype.Transports.peerjs.init = function (ctrl) {
     function initSocket(socket) {
+      this.trigger('connect');
+      var self = this;
       socket.on('data', function (data) {
         data = JSON.parse(data);
-        (this._topicCbs[data.topic] || []).forEach(function (cb) {
-          console.log(data);
-          cb(data.data);
-        });
+        self.trigger(data.topic, data.data);
       });
     }
 
@@ -497,26 +496,38 @@
         hostName = ctrl._gameName + '-host',
         peer = new Peer((ctrl._isHost) ? hostName : peerName,
           { host: 'localhost', port: 5000, path: '/peerjs' });
+    this._topicCbs = {};
     if (ctrl._isHost) {
+      console.log(hostName);
       var self = this;
       peer.on('connection', function (conn) {
+        console.log('Connected to', peerName);
         self._socket = conn;
         initSocket.call(self, self._socket);
       });
     } else {
+      console.log('Connecting to', hostName);
       this._socket = peer.connect(hostName);
       initSocket.call(this, this._socket);
     }
-    this._topicCbs = {};
+  };
+
+  mk.controllers.Network.prototype.Transports.peerjs.trigger =
+    function (topic, data) {
+    (this._topicCbs[topic] || []).forEach(function (cb) {
+      console.log(topic, data);
+      cb(data);
+    });
   };
 
   mk.controllers.Network.prototype.Transports.peerjs.emit =
     function (topic, data) {
-    var msg = {
+    var msg = JSON.stringify({
       topic: topic,
       data: data
-    };
-    this._socket.send(JSON.stringify(msg));
+    });
+    console.log('Sending', msg);
+    this._socket.send(msg);
   };
 
   mk.controllers.Network.prototype.Transports.peerjs.on = function (topic, cb) {
