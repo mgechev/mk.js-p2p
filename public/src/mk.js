@@ -483,16 +483,44 @@
    * WebRTC via peerjs transport
    */
   mk.controllers.Network.prototype.Transports.peerjs.init = function () {
-    var peer = new Peer(this._gameName,
-      { host: 'localhost', port: 5000, path: '/peerjs' });
+    function initSocket(socket) {
+      socket.on('data', function (data) {
+        data = JSON.parse(data);
+        (this._topicCbs[data.topic] || []).forEach(function (cb) {
+          cb(data.data);
+        });
+      });
+    }
+
+    var peerName = this._gameName + '-peer',
+        hostName = this._gamaName + '-host',
+        peer = new Peer((this._isHost) ? hostName : peerName,
+          { host: 'localhost', port: 5000, path: '/peerjs' });
+    if (this._isHost) {
+      var self = this;
+      peer.on('connection', function (conn) {
+        self._socket = conn;
+        initSocket.call(self, self._socket);
+      });
+    } else {
+      this._socket = peer.connect(hostName);
+      initSocket.call(this, this._socket);
+    }
+    this._topicCbs = {};
   };
 
-  mk.controllers.Network.prototype.Transports.peerjs.emit = function () {
-    this._socket.emit.apply(this._socket, arguments);
+  mk.controllers.Network.prototype.Transports.peerjs.emit =
+    function (topic, data) {
+    var msg = {
+      topic: topic,
+      data: data
+    };
+    this._socket.send(msg);
   };
 
-  mk.controllers.Network.prototype.Transports.peerjs.on = function () {
-    this._socket.on.apply(this._socket, arguments);
+  mk.controllers.Network.prototype.Transports.peerjs.on = function (topic, cb) {
+    this._topicCbs[topic] = this._topicCbs[topic] || [];
+    this._topicCbs[topic].push(cb);
   };
 
 
