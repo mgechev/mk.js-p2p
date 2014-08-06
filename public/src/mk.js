@@ -463,20 +463,38 @@
   };
 
   mk.controllers.Network.prototype.Transports = {
-    socketio: {}
+    socketio: {},
+    peerjs: {}
   };
 
-  mk.controllers.Network.prototype.Transports.socketio.init = function() {
+  mk.controllers.Network.prototype.Transports.socketio.init = function () {
     this._socket = io.connect();
   };
 
-  mk.controllers.Network.prototype.Transports.socketio.emit = function() {
+  mk.controllers.Network.prototype.Transports.socketio.emit = function () {
     this._socket.emit.apply(this._socket, arguments);
   };
 
-  mk.controllers.Network.prototype.Transports.socketio.on = function() {
+  mk.controllers.Network.prototype.Transports.socketio.on = function () {
     this._socket.on.apply(this._socket, arguments);
   };
+
+  /**
+   * WebRTC via peerjs transport
+   */
+  mk.controllers.Network.prototype.Transports.peerjs.init = function () {
+    var peer = new Peer(this._gameName,
+      { host: 'localhost', port: 5000, path: '/peerjs' });
+  };
+
+  mk.controllers.Network.prototype.Transports.peerjs.emit = function () {
+    this._socket.emit.apply(this._socket, arguments);
+  };
+
+  mk.controllers.Network.prototype.Transports.peerjs.on = function () {
+    this._socket.on.apply(this._socket, arguments);
+  };
+
 
   mk.controllers.Network.prototype._createGame = function (game) {
     this._transport.emit(this.Requests.CREATE_GAME, this._gameName);

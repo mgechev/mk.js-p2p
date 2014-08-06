@@ -11,9 +11,6 @@
     <th>
       Arena
     </th>
-    <th>
-      Webcam
-    </th>
   </thead>
   <tbody>
     <tr>
@@ -31,8 +28,6 @@
             <span class="loadingLabel">Loading...</span>
           </div>
         </div>
-      </td>
-      <td id="webcam-parent">
       </td>
     </tr>
     <tr>
@@ -75,6 +70,18 @@
           }
         };
 
+        var guid = (function() {
+          function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                       .toString(16)
+                       .substring(1);
+          }
+          return function() {
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                   s4() + '-' + s4() + s4() + s4();
+          };
+        })();
+
         (function () {
           var startGame = function () {
             $('loading').style.visibility = 'hidden';
@@ -96,9 +103,9 @@
                 }
               }
             },
-            isHost: /^yes$/i.test('no'),
-            gameName: '',
-            gameType: 'network'
+            isHost: /room=/.test(location.hash),
+            gameName: (location.href.match(/#room=(.*)/) || []) || guid(),
+            gameType: 'p2p'
           };
 
           function startNewGame() {
